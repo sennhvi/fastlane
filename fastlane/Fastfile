@@ -488,9 +488,10 @@ end
 
 desc "Get the local version number per version.rb"
 private_lane :local_version do
-  require "../fastlane/lib/fastlane/version.rb"
+  # require "../fastlane/lib/fastlane/version.rb"
 
-  Fastlane::VERSION
+  # Fastlane::VERSION
+  '2.102.0'.freeze
 end
 
 desc "Get the version number of the last release"
