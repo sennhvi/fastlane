@@ -12,8 +12,13 @@ end
 require 'bootsnap'
 require 'tmpdir'
 # env = ENV['RAILS_ENV'] || "development"
+cache_dir = "#{Dir.tmpdir}/bootsnapcache"
+require 'fileutils'
+unless File.directory?(cache_dir)
+  FileUtils.mkdir_p(cache_dir)
+end
 Bootsnap.setup(
-  cache_dir:            "#{Dir.tmpdir}/bootsnapcache", # Path to your cache
+  cache_dir:            cache_dir, # Path to your cache
   # development_mode:     env == 'development', # Current working environment, e.g. RACK_ENV, RAILS_ENV, etc
   load_path_cache:      true, # Optimize the LOAD_PATH with a cache
   autoload_paths_cache: false, # Optimize ActiveSupport autoloads with cache
