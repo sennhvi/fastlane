@@ -50,7 +50,13 @@ end
 desc "Measure the execution time of the --help command"
 lane :benchmark_help_command do
   Dir.chdir("..") do
-    sh('npm install -g gnomon')
+    # install npm and gnomon on Linux
+    unless Helper.windows? || Helper.mac?
+      sh('curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -')
+      sh('sudo apt-get install -y nodejs')
+      sh('sudo npm install -g gnomon')
+    end
+    sh('npm install -g gnomon') if Helper.windows? || Helper.mac?
     cmd = Helper.windows? ? "cd bin && fastlane --help | gnomon" : "bin/fastlane --help | gnomon"
     3.times do
       content = sh(cmd, log: false)
