@@ -8,8 +8,8 @@ require 'bootsnap'
 require 'tmpdir'
 env = ENV['RAILS_ENV'] || "development"
 Bootsnap.setup(
-  cache_dir:            "#{Dir.tmpdir}/bootsnapcache",          # Path to your cache
-  #development_mode:     env == 'development', # Current working environment, e.g. RACK_ENV, RAILS_ENV, etc
+  cache_dir:            "#{Dir.tmpdir}/bootsnapcache", # Path to your cache
+  # development_mode:     env == 'development', # Current working environment, e.g. RACK_ENV, RAILS_ENV, etc
   load_path_cache:      false,                 # Optimize the LOAD_PATH with a cache
   autoload_paths_cache: false,                 # Optimize ActiveSupport autoloads with cache
   disable_trace:        false,                 # (Alpha) Set `RubyVM::InstructionSequence.compile_option = { trace_instruction: false }`
