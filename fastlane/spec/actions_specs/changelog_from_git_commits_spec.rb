@@ -6,7 +6,11 @@ describe Fastlane do
           changelog_from_git_commits
         end").runner.execute(:test)
 
-        expect(result).to eq("git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD")
+        last_commit = "git rev-list --tags --max-count=1"
+        tag_name =  "git describe --tags `#{last_commit}`"
+        # this is not really the command that would have been executed, but a "fabricated" representation for tests (by Actions.sh) 
+        pseudocommand = "git log --pretty=\"%B\" #{tag_name.shellescape}...HEAD" 
+        expect(result).to eq(pseudocommand)
       end
 
       it "Uses the provided pretty format to collect log messages" do
@@ -14,7 +18,9 @@ describe Fastlane do
           changelog_from_git_commits(pretty: '%s%n%b')
         end").runner.execute(:test)
 
-        expect(result).to eq("git log --pretty=\"%s%n%b\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD")
+        inner_command = "git describe --tags `git rev-list --tags --max-count=1`"
+        pseudocommand = "git log --pretty=\"%s%n%b\" #{inner_command.shellescape}...HEAD"
+        expect(result).to eq(pseudocommand)#
       end
 
       it "Uses the provided date format to collect log messages if specified" do
@@ -22,7 +28,8 @@ describe Fastlane do
           changelog_from_git_commits(pretty: '%s%n%b', date_format: 'short')
         end").runner.execute(:test)
 
-        expect(result).to eq("git log --pretty=\"%s%n%b\" --date=\"short\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD")
+        pseudocommand = "git log --pretty=\"%s%n%b\" --date=\"short\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD"
+        expect(result).to eq(pseudocommand)#
       end
 
       it "Does not match lightweight tags when searching for the last one if so requested" do
@@ -30,7 +37,8 @@ describe Fastlane do
           changelog_from_git_commits(match_lightweight_tag: false)
         end").runner.execute(:test)
 
-        expect(result).to eq("git log --pretty=\"%B\" git\\ describe\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD")
+        pseudocommand = "git log --pretty=\"%B\" git\\ describe\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD"
+        expect(result).to eq(pseudocommand)#
       end
 
       it "Collects logs in the specified revision range if specified" do
@@ -46,7 +54,7 @@ describe Fastlane do
           changelog_from_git_commits(between: ['v1.8.0(30)', 'HEAD'])
         end").runner.execute(:test)
 
-        expect(result).to eq("git log --pretty=\"%B\" v1.8.0\\(30\\)...HEAD")
+        expect(result).to eq("git log --pretty=\"%B\" v1.8.0\\(30\\)...HEAD")#
       end
 
       it "Does not accept a :between array of size 1" do
@@ -113,7 +121,8 @@ describe Fastlane do
           changelog_from_git_commits(include_merges: false)
         end").runner.execute(:test)
 
-        expect(result).to eq("git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD --no-merges")
+        pseudocommand = "git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD --no-merges"
+        expect(result).to eq(pseudocommand)#
       end
 
       it "Only include merge commits if merge_commit_filtering is only_include_merges" do
@@ -121,7 +130,8 @@ describe Fastlane do
           changelog_from_git_commits(merge_commit_filtering: 'only_include_merges')
         end").runner.execute(:test)
 
-        expect(result).to eq("git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD --merges")
+        pseudocommand = "git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD --merges"
+        expect(result).to eq(pseudocommand)#
       end
 
       it "Include merge commits if merge_commit_filtering is include_merges" do
@@ -129,7 +139,8 @@ describe Fastlane do
           changelog_from_git_commits(merge_commit_filtering: 'include_merges')
         end").runner.execute(:test)
 
-        expect(result).to eq("git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD")
+        pseudocommand = "git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD"
+        expect(result).to eq(pseudocommand)#
       end
 
       it "Does not include merge commits if merge_commit_filtering is exclude_merges" do
@@ -137,7 +148,8 @@ describe Fastlane do
           changelog_from_git_commits(merge_commit_filtering: 'exclude_merges')
         end").runner.execute(:test)
 
-        expect(result).to eq("git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD --no-merges")
+        pseudocommand = "git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD --no-merges"
+        expect(result).to eq(pseudocommand)#
       end
 
       it "Uses pattern matching for tag name if requested" do
@@ -145,7 +157,8 @@ describe Fastlane do
           changelog_from_git_commits(tag_match_pattern: '*1.8*')
         end").runner.execute(:test)
 
-        expect(result).to eq("git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\=\\\\\\*1.8\\\\\\*\\ --max-count\\=1\\`...HEAD")
+        pseudocommand = "git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\=\\\\\\*1.8\\\\\\*\\ --max-count\\=1\\`...HEAD"
+        expect(result).to eq(pseudocommand)#
       end
 
       it "Does not use pattern matching for tag name if so requested" do
@@ -153,7 +166,8 @@ describe Fastlane do
           changelog_from_git_commits()
         end").runner.execute(:test)
 
-        expect(result).to eq("git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD")
+        pseudocommand = "git log --pretty=\"%B\" git\\ describe\\ --tags\\ \\`git\\ rev-list\\ --tags\\ --max-count\\=1\\`...HEAD"
+        expect(result).to eq(pseudocommand)#
       end
 
       it "Runs between option from command line" do
